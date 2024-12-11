@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mistery Lab Season.1</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+        * {
+            font-family: "Gowun Dodum", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            background-color: black;
+            color: #fff;
+        }
+
+        .image {
+            background-image: url('미스터리랩1.png');
+            background-position: center center;
+            background-size: 60%;
+            background-repeat: no-repeat;
+            height: 450px;
+        }
+
+        .main {
+            color: white;
+        }
+
+        .play,
+        .hint {
+            color: white;
+            width: 500px;
+            margin: 20px auto 20px auto;
+            border: 1px solid white;
+            padding: 20px;
+            display: none;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .section {
+            width: 45%;
+            padding: 20px;
+            background-color: #222;
+            border: 2px solid rgb(223, 178, 30);
+            border-radius: 10px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #fff;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background-color: rgb(223, 178, 30);
+            color: #000;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #buttonContainer {
+            margin-top: 20px;
+        }
+
+        #buttonContainer button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<script>
+
+    // 페이지 로드 시 데이터 불러오기
+    window.onload = function () {
+        // localStorage에서 데이터 불러오기
+        const schoolName = localStorage.getItem('a');
+        const studentID = localStorage.getItem('b');
+        const studentName = localStorage.getItem('c');
+
+        console.log("Saving to localStorage:", schoolName, studentID, studentName);
+        // HTML에 데이터 출력
+        document.getElementById("schoolName").innerText = schoolName;
+        document.getElementById("studentID").innerText = studentID;
+        document.getElementById("studentName").innerText = studentName;
+    };
+
+
+    function displayText() {
+        var number = document.getElementById("numberInput").value;
+        var displayArea = document.getElementById("displayText");
+        var hintText = document.getElementById("hintText");
+        var buttonContainer = document.getElementById("buttonContainer");
+        var hintButton = document.getElementById("hintButton");
+        var resetButton = document.getElementById("resetButton");
+
+        var text = "";
+        var hint = "";
+
+        // 숫자에 따른 문구 설정
+        if (number == 1) {
+            text = "힌트 1 : 카드 속에 여러 숫자가 숨겨져있다. 눈 크게 뜨고 잘 찾아보자.";
+            hint = "추가 힌트 1: 헬륨, 리튬, 베릴륨, 붕소, 탄소, 플루오린 원소가 숨겨져 있다. 각 원소의 원소기호에 해당하는 카드를 열어보자.";
+        } else if (number == 2) {
+            text = "힌트 2 : 리모컨으로 어떤 물체를 키고 끌 수 있다. 해당 물체가 있는 카드를 옆에 나란히 놔둬보자.";
+            hint = "추가 힌트 2 : 2번과 3번 카드를 나란히 놓으면 4글자의 단어가 나타난다(2번이 왼쪽, 3번이 오른쪽). 플레이칸에 입력해보자.";
+        } else if (number == 3) {
+            text = "힌트 3 : TV를 키기 위해선 어떤 물체가 필요하다. 해당 물체가 있는 카드를 옆에 나란히 놔둬보자.";
+            hint = "추가 힌트 3 : 2번과 3번 카드를 나란히 놓으면 4글자의 단어가 나타난다(2번이 왼쪽, 3번이 오른쪽). 플레이칸에 입력해보자.";
+        } else if (number == 4) {
+            text = "힌트 4 : 금고를 열려면 모스부호를 해석해야 한다."
+            hint = "추가 힌트 4 : 모스부호를 해석해서 열쇠를 얻은 후 금고를 열어보자."
+        } else if (number == 5) {
+            text = "힌트 5 : 모스 신호인 것 같다. 어딘가에 모스코드표가 있을 것 같은데..?"
+            hint = "추가 힌트 5 : 모스코드표를 보고 모스 신호를 해석하면 다음과 같다. SOS / 좀비출몰 / 질소카드"
+        } else if (number == 6) {
+            text = "힌트 6 : 모스코드표인 것 같다. 어딘가에 모스 부호가 있을 것 같은데..?"
+            hint = "추가 힌트 6 : 모스코드표를 보고 모스 신호를 해석하면 다음과 같다. SOS / 좀비출몰 / 질소카드"
+        } else if (number == 7) {
+            text = "힌트 7 : 열쇠로 열 수 있는 사물과 결합해보자."
+            hint = "추가 힌트 7 : 금고 카드의 원소기호(Be)와 결합해 보자"
+        } else if (number == 8) {
+            text = "힌트 8 : 3장의 학교 카드를 순서대로 놓아보자."
+            hint = "추가 힌트 8 : 학교 카드를 순서대로 올바르게 놓았다면, 원소기호 S,O,Na가 차례대로 보일 것이다."
+        } else if (number == 9) {
+            text = "힌트 9 : 나가는 문을 열기 위해선, 금고 속에서 나온 편지로 ‘어디로 가야할지’를 알아야 한다."
+            hint = "추가힌트 9 : 우리는 ‘oooo'중학교로 가야한다. 작은 따옴표 안의 답을 '플레이'칸에 입력하자."
+        } else if (number == 11) {
+            text = "힌트 11 : 3장의 학교 카드를 순서대로 놓아보자."
+            hint = "추가 힌트 11 : 학교 카드를 순서대로 올바르게 놓았다면, 원소기호 S,O,Na가 차례대로 보일 것이다."
+        } else if (number == 16) {
+            text = "힌트 16 : 3장의 학교 카드를 순서대로 놓아보자."
+            hint = "추가 힌트 16 : 학교 카드를 순서대로 올바르게 놓았다면, 원소기호 S,O,Na가 차례대로 보일 것이다."
+        } else if (number == 28) {
+            text = "힌트 28 : 녹취록 속에 숫자 3개가 숨어있다. 찾아서 카드를 열어보자."
+            hint = "추가힌트 28 : 16,8,11 카드를 열어보자"
+        } else {
+            text = "해당하는 숫자의 힌트가 없습니다.";
+            hint = "해당하는 숫자의 힌트가 없습니다.";
+        }
+
+        // 문구 출력
+        displayArea.innerText = text;
+
+        // 힌트 설정
+        hintText.innerText = hint;
+        hintText.style.display = "none";
+
+        // 숫자 입력 후 버튼 보이도록 설정
+        buttonContainer.style.display = "block";
+        hintButton.style.display = "block";
+        resetButton.style.display = "none";
+    }
+
+    function showHint() {
+        var hintText = document.getElementById("hintText");
+        var hintButton = document.getElementById("hintButton");
+        var resetButton = document.getElementById("resetButton");
+
+        if (!hintText) return; // 요소가 없으면 함수 종료
+
+        hintText.style.display = "block";
+        hintButton.style.display = "none"; // 추가힌트보기 버튼 숨김
+        resetButton.style.display = "block"; // 처음으로 버튼 보임
+
+        // 처음으로 버튼을 추가힌트 아래로 이동
+        hintText.parentNode.insertBefore(resetButton, hintText.nextSibling);
+    }
+
+    function resetPage() {
+        document.getElementById("numberInput").value = "";
+        document.getElementById("displayText").innerText = "";
+        document.getElementById("hintText").innerText = "";
+        document.getElementById("hintText").style.display = "none";
+        document.getElementById("buttonContainer").style.display = "none";
+        document.getElementById("playInput").value = "";
+        document.getElementById("playOutput").innerText = "";
+    }
+
+    function displayPlay() {
+        var playInput = document.getElementById("playInput").value;
+        var playOutput = document.getElementById("playOutput");
+
+        // 각 알파벳에 대한 처리
+        if (playInput === 'SONa') {
+            playOutput.innerHTML = "미스터리랩 회의실 탈출에 성공했습니다! 확인을 누르시면 '소나중학교'로 이동합니다.";
+            alert("미스터리랩 회의실 탈출에 성공했습니다! 확인을 누르시면 '소나중학교'로 이동합니다.");
+            console.log("School Name:", schoolName);
+            console.log("Student ID:", studentID);
+            console.log("Student Name:", studentName);
+
+            window.location.href = 'page1.html'; // page1.html로 이동
+        } else if (playInput === 'HeLi') {
+            playOutput.innerHTML = "<br>2,3 카드를 버리세요.<br>";
+            playOutput.innerHTML += "<br><iframe width='100%' height='100%' src='https://www.youtube.com/embed/9Wxy-9Y949c' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe>";
+        } else if (playInput === 'BC' || playInput === 'CB') {
+            playOutput.innerHTML = "모스부호표를 해독하세요"
+        } else if (playInput === 'BeN') {
+            playOutput.innerHTML = "<br><img src='카드21.jpg' alt='BeN'  style='width:100%; height:100%;'>"
+        } else if (playInput === 'ONaS') {
+            playOutput.innerHTML = "<br>잘못된 단어입니다. <br>힌트 : 3장의 학교 카드를 순서대로 놓아보자. "
+        } else if (playInput === 'FILE') {
+            playOutput.innerHTML = "<br>4,5,6,7 카드를 버리세요.<br>";
+            playOutput.innerHTML += "<br><img src='녹취록.png' alt='FILE' style='width:100%; height:100%;'>";
+        }
+        else {
+            playOutput.innerHTML = "잘못된 단어입니다. 대소문자를 구분해주세요.";
+        }
+    }
+
+</script>
+
+<body>
+    <header class="p-3 text-bg-dark">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+                        <use xlink:href="#bootstrap"></use>
+                    </svg>
+                </a>
+
+                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <li><a href="#" class="nav-link px-2 text-danger">Mystery Lab</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container">
+        <div class="section">
+            <h3>로그인 정보</h3>
+            <p>학교명: <span id="schoolName"></span></p>
+            <p>학번: <span id="studentID"></span></p>
+            <p>이름: <span id="studentName"></span></p>
+        </div>
+    </div>
+
+    <div class="image"></div>
+
+    <div class="main">
+        <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold"> 튜토리얼 </h1>
+                <p class="col-md-8 fs-4">미스터리 랩. 세계 각지에서 일어나는 비현실적인 상황에 대한 연구를 하는 곳.
+                    일반 사람들의 생각으로 설명할 수 없는 비현실적인 일들은 생각보다 우리 가까이에서 일어난다는 걸 아는가? 그렇기 때문에, 그걸 해결하는 우리 역시도 당신의 가까이에 있지.
+                    그러나 한정된 인력 때문에 우리를 도와줄 수 있는 조력자가 절실하다네.
+                    우리를 돕는 방법은 간단해. 우리의 과제를 함께 해결해 줄 것.
+                    이 편지를 받은 당신이라면, 그 자격이 충분하다고 생각한다네.
+                    다만 누구에게나 처음이라는 것이 있으니, 당신이 우리 연구소의 일을 도울 수 있도록 내가 도움을 주고자 하는데, 어떤가?
+                    준비가 되었다면, 우리 연구실로 당신을 초대하지.
+                    그럼, 행운을 빌겠네. 부디, 당신을 만날 수 있으면 좋겠군.</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="section">
+            <label for="numberInput">힌트(카드 번호 입력):</label>
+            <input type="number" id="numberInput">
+            <button onclick="displayText()">힌트</button>
+            <p id="displayText"></p>
+            <div id="buttonContainer" style="display: none;">
+                <button id="hintButton" onclick="showHint()">추가힌트보기</button>
+                <button id="resetButton" onclick="resetPage()" style="display: none;">처음으로</button>
+            </div>
+            <p id="hintText" style="display: none;"></p>
+        </div>
+        <div class="section">
+            <label for="playInput">플레이(영어 알파벳 입력):</label>
+            <input type="text" id="playInput">
+            <button onclick="displayPlay()">플레이</button>
+            <div id="playOutput"></div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
